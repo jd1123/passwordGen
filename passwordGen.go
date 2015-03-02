@@ -1,20 +1,17 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
 	"time"
 )
 
-func GeneratePassword() string {
+func GeneratePassword(min_letters, min_numbers, min_chars int) string {
 	// Policy - legal characters for password
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	numbers := []rune("0123456789")
 	chars := []rune("!@#$%^&*")
-	// Minimum number of each type of rune
-	min_letters := 6
-	min_numbers := 4
-	min_chars := 2
 	// Entropy of number of chars
 	letter_ent := 3
 	number_ent := 6
@@ -45,11 +42,16 @@ func GeneratePassword() string {
 }
 
 func main() {
+	ml := flag.Int("ml", 6, "Minimum number of letters. Default is 6.")
+	mn := flag.Int("mn", 4, "Minimum number of numbers. Default is 4.")
+	mc := flag.Int("mc", 2, "Minimum number of characters. Default is 2.")
+	numPasswords := flag.Int("np", 16, "Number of passwords to generate. Default is 16")
+	flag.Parse()
 	// Seed the generator
 	rand.Seed(time.Now().Unix())
 
 	// Generate 16 passwords
-	for i := 0; i < 16; i++ {
-		fmt.Println("Password ", i, " : ", GeneratePassword())
+	for i := 0; i < *numPasswords; i++ {
+		fmt.Println("Password ", i, " : ", GeneratePassword(*ml, *mn, *mc))
 	}
 }
