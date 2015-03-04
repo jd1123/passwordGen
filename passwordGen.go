@@ -7,13 +7,27 @@ import (
 	"time"
 )
 
-func GeneratePassword(min_letters, min_numbers, min_chars, letter_entropy, number_entropy, char_entropy int) string {
+type Policy struct {
+	Min_letters       int
+	Min_numbers       int
+	Min_characters    int
+	Letter_entropy    int
+	Number_entropy    int
+	Character_entropy int
+}
+
+func NewPolicy(ml, mn, mc, le, ne, ce int) Policy {
+	return Policy{ml, mn, mc, le, ne, ce}
+}
+
+func GeneratePassword(p Policy) string {
 	// Policy - legal characters for password
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	numbers := []rune("0123456789")
 	chars := []rune("!@#$%^&*_")
-	entropy := []int{number_entropy, letter_entropy, char_entropy}
-	nums := []int{min_letters, min_numbers, min_chars}
+
+	entropy := []int{p.Number_entropy, p.Letter_entropy, p.Character_entropy}
+	nums := []int{p.Min_letters, p.Min_numbers, p.Min_characters}
 	for i := 0; i < 3; i++ {
 		if entropy[i] > 0 {
 			nums[i] += rand.Intn(entropy[i])
@@ -50,14 +64,18 @@ func main() {
 	letter_entropy := flag.Int("le", 3, "Letter Entropy. Default is 3")
 	number_entropy := flag.Int("ne", 6, "Number entropy. Default is 6")
 	char_entropy := flag.Int("ce", 3, "Character entropy. Default is 3")
-	numPasswords := flag.Int("np", 16, "Number of passwords to generate. Default is 16")
+	numPasswords := flag.Int("np", 1, "Number of passwords to generate. Default is 1")
 	flag.Parse()
 
 	// Seed the generator
 	rand.Seed(time.Now().Unix())
-
+	p := NewPolicy(*ml, *mn, *mc, *letter_entropy, *number_entropy, *char_entropy)
 	// Generate 16 passwords
-	for i := 0; i < *numPasswords; i++ {
-		fmt.Println("Password ", i, " : ", GeneratePassword(*ml, *mn, *mc, *letter_entropy, *number_entropy, *char_entropy))
+	if *numPasswords == 1 {
+		fmt.Println(GeneratePassword(p))
+	} else {
+		for i := 0; i < *numPasswords; i++ {
+			fmt.Println("Password ", i+1, " : ", GeneratePassword(p))
+		}
 	}
 }
