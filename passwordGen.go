@@ -5,8 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"math/big"
-	mr "math/rand"
-	"time"
 )
 
 type Policy struct {
@@ -55,12 +53,23 @@ func GeneratePassword(p Policy) string {
 
 	// Permute the rune array to generate random
 	// permutation
-	perm := mr.Perm(len(b))
+	perm := psPerm(len(b))
 	dest := make([]rune, len(b))
 	for i, v := range perm {
 		dest[v] = b[i]
 	}
 	return string(dest)
+}
+
+func psPerm(n int) []int {
+	m := make([]int, n)
+	for i := 0; i < n; i++ {
+		j, _ := rand.Int(rand.Reader, big.NewInt(int64(i+1)))
+		k := int(j.Int64())
+		m[i] = m[int(k)]
+		m[k] = i
+	}
+	return m
 }
 
 func main() {
@@ -74,7 +83,6 @@ func main() {
 	flag.Parse()
 
 	// Seed the generator for permutations
-	mr.Seed(time.Now().Unix())
 	p := NewPolicy(*ml, *mn, *mc, *letter_entropy, *number_entropy, *char_entropy)
 	// Generate 16 passwords
 	if *numPasswords == 1 {
