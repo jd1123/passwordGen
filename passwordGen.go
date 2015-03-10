@@ -1,9 +1,11 @@
 package main
 
 import (
+	"crypto/rand"
 	"flag"
 	"fmt"
-	"math/rand"
+	"math/big"
+	mr "math/rand"
 	"time"
 )
 
@@ -30,7 +32,8 @@ func GeneratePassword(p Policy) string {
 	nums := []int{p.Min_letters, p.Min_numbers, p.Min_characters}
 	for i := 0; i < 3; i++ {
 		if entropy[i] > 0 {
-			nums[i] += rand.Intn(entropy[i])
+			r, _ := rand.Int(rand.Reader, big.NewInt(int64(entropy[i])))
+			nums[i] += int(r.Int64())
 		}
 	}
 
@@ -38,18 +41,21 @@ func GeneratePassword(p Policy) string {
 
 	b := make([]rune, total_runes)
 	for i := 0; i < nums[0]; i++ {
-		b[i] = letters[rand.Intn(len(letters))]
+		r, _ := rand.Int(rand.Reader, big.NewInt(int64(len(letters))))
+		b[i] = letters[r.Int64()]
 	}
 	for i := nums[0]; i < (nums[0] + nums[1]); i++ {
-		b[i] = numbers[rand.Intn(len(numbers))]
+		r, _ := rand.Int(rand.Reader, big.NewInt(int64(len(numbers))))
+		b[i] = numbers[r.Int64()]
 	}
 	for i := nums[0] + nums[1]; i < total_runes; i++ {
-		b[i] = chars[rand.Intn(len(chars))]
+		r, _ := rand.Int(rand.Reader, big.NewInt(int64(len(chars))))
+		b[i] = chars[r.Int64()]
 	}
 
 	// Permute the rune array to generate random
 	// permutation
-	perm := rand.Perm(len(b))
+	perm := mr.Perm(len(b))
 	dest := make([]rune, len(b))
 	for i, v := range perm {
 		dest[v] = b[i]
@@ -67,8 +73,8 @@ func main() {
 	numPasswords := flag.Int("np", 1, "Number of passwords to generate. Default is 1")
 	flag.Parse()
 
-	// Seed the generator
-	rand.Seed(time.Now().Unix())
+	// Seed the generator for permutations
+	mr.Seed(time.Now().Unix())
 	p := NewPolicy(*ml, *mn, *mc, *letter_entropy, *number_entropy, *char_entropy)
 	// Generate 16 passwords
 	if *numPasswords == 1 {
