@@ -8,16 +8,17 @@ import (
 )
 
 type Policy struct {
-	Min_letters       int
-	Min_numbers       int
-	Min_characters    int
-	Letter_entropy    int
-	Number_entropy    int
-	Character_entropy int
+	MinLetters       int
+	MinNumbers       int
+	MinCharacters    int
+	LetterEntropy    int
+	NumberEntropy    int
+	CharacterEntropy int
+	NoPolicy         bool
 }
 
 func NewPolicy(ml, mn, mc, le, ne, ce int) Policy {
-	return Policy{ml, mn, mc, le, ne, ce}
+	return Policy{ml, mn, mc, le, ne, ce, false}
 }
 
 func GeneratePassword(p Policy) string {
@@ -26,8 +27,8 @@ func GeneratePassword(p Policy) string {
 	numbers := []rune("0123456789")
 	chars := []rune("!@#$%^&*_")
 
-	entropy := []int{p.Number_entropy, p.Letter_entropy, p.Character_entropy}
-	nums := []int{p.Min_letters, p.Min_numbers, p.Min_characters}
+	entropy := []int{p.NumberEntropy, p.LetterEntropy, p.CharacterEntropy}
+	nums := []int{p.MinLetters, p.MinNumbers, p.MinCharacters}
 	for i := 0; i < 3; i++ {
 		if entropy[i] > 0 {
 			r, _ := rand.Int(rand.Reader, big.NewInt(int64(entropy[i])))
@@ -76,14 +77,14 @@ func main() {
 	ml := flag.Int("ml", 6, "Minimum number of letters. Default is 6.")
 	mn := flag.Int("mn", 4, "Minimum number of numbers. Default is 4.")
 	mc := flag.Int("mc", 2, "Minimum number of characters. Default is 2.")
-	letter_entropy := flag.Int("le", 3, "Letter Entropy. Default is 3")
-	number_entropy := flag.Int("ne", 6, "Number entropy. Default is 6")
-	char_entropy := flag.Int("ce", 3, "Character entropy. Default is 3")
+	letterEntropy := flag.Int("le", 3, "Letter Entropy. Default is 3")
+	numberEntropy := flag.Int("ne", 6, "Number entropy. Default is 6")
+	charEntropy := flag.Int("ce", 3, "Character entropy. Default is 3")
 	numPasswords := flag.Int("np", 1, "Number of passwords to generate. Default is 1")
 	flag.Parse()
 
 	// Seed the generator for permutations
-	p := NewPolicy(*ml, *mn, *mc, *letter_entropy, *number_entropy, *char_entropy)
+	p := NewPolicy(*ml, *mn, *mc, *letterEntropy, *numberEntropy, *charEntropy)
 	// Generate 16 passwords
 	if *numPasswords == 1 {
 		fmt.Println(GeneratePassword(p))
