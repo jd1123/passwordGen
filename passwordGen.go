@@ -8,13 +8,8 @@ import (
 )
 
 type Policy struct {
-	MinLetters       int
-	MinNumbers       int
-	MinCharacters    int
-	LetterEntropy    int
-	NumberEntropy    int
-	CharacterEntropy int
-	NoPolicy         bool
+	MinLetters, MinNumbers, MinCharacters, LetterEntropy, NumberEntropy, CharacterEntropy int
+	NoPolicy bool
 }
 
 func NewPolicy(ml, mn, mc, le, ne, ce int) Policy {
