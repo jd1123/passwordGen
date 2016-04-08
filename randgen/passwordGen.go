@@ -1,20 +1,9 @@
-package main
+package randgen
 
 import (
 	"crypto/rand"
-	"flag"
-	"fmt"
 	"math/big"
 )
-
-type Policy struct {
-	MinLetters, MinNumbers, MinCharacters, LetterEntropy, NumberEntropy, CharacterEntropy int
-	NoPolicy bool
-}
-
-func NewPolicy(ml, mn, mc, le, ne, ce int) Policy {
-	return Policy{ml, mn, mc, le, ne, ce, false}
-}
 
 func GeneratePassword(p Policy) string {
 	// Policy - legal characters for password
@@ -66,26 +55,4 @@ func psPerm(n int) []int {
 		m[k] = i
 	}
 	return m
-}
-
-func main() {
-	ml := flag.Int("ml", 6, "Minimum number of letters. Default is 6.")
-	mn := flag.Int("mn", 4, "Minimum number of numbers. Default is 4.")
-	mc := flag.Int("mc", 2, "Minimum number of characters. Default is 2.")
-	letterEntropy := flag.Int("le", 3, "Letter Entropy. Default is 3")
-	numberEntropy := flag.Int("ne", 6, "Number entropy. Default is 6")
-	charEntropy := flag.Int("ce", 3, "Character entropy. Default is 3")
-	numPasswords := flag.Int("np", 1, "Number of passwords to generate. Default is 1")
-	flag.Parse()
-
-	// Seed the generator for permutations
-	p := NewPolicy(*ml, *mn, *mc, *letterEntropy, *numberEntropy, *charEntropy)
-	// Generate 16 passwords
-	if *numPasswords == 1 {
-		fmt.Println(GeneratePassword(p))
-	} else {
-		for i := 0; i < *numPasswords; i++ {
-			fmt.Println("Password ", i+1, " : ", GeneratePassword(p))
-		}
-	}
 }
