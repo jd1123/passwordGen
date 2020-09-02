@@ -9,4 +9,4 @@ func NewPolicy(ml, mn, mc, le, ne, ce int) Policy {
 	return Policy{ml, mn, mc, le, ne, ce, false}
 }
 
-var StandardPolicy Policy = NewPolicy(7, 4, 3, 0, 0, 0)
+var StandardPolicy Policy = NewPolicy(15, 12, 0, 5, 5, 0)
