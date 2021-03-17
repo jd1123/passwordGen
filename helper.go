@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/jd1123/passwordGen/randgen"
@@ -14,6 +15,22 @@ func fileExists(filename string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+func writeFile(filename string) {
+	const s = `{
+        "MinLetters": 10, 
+        "MinNumbers": 8, 
+        "MinCharacters": 0, 
+        "LetterEntropy": 12, 
+        "NumberEntropy": 9, 
+        "CharacterEntryopy": 0
+}`
+
+	err := ioutil.WriteFile(filename, []byte(s), 0644)
+	if err != nil {
+		panic(err)
+	}
 }
 
 type ConfigStruct struct {

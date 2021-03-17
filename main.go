@@ -22,6 +22,10 @@ func main() {
 	defaultPolicy := randgen.StandardPolicy
 	if fileExists(configfile) {
 		defaultPolicy = parseConfig(configfile)
+	} else {
+		fmt.Println("No config file found. Creating default policy in ~/.pginfo...")
+		writeFile(configfile)
+		defaultPolicy = parseConfig(configfile)
 	}
 
 	app := cli.NewApp()
