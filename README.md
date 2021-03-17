@@ -3,6 +3,8 @@
 ## Why?
 I like random passwords for sensitive logins since password attacks are pretty easy to execute. This generates a truly pseudorandom password (based on Go's crypto/rand package). This can be used effectively with the [pass](https://wiki.archlinux.org/index.php/Pass) package in Archlinux.
 
+Looking back on this five years later, I still find this small piece of software very useful. I hope you do too!
+
 ## Instructions
 Download the package and build it:
 ```
@@ -28,5 +30,10 @@ The following generates a password from 7 to 14 runes, with a minimum of 5 lette
 ```
 passwordGen new -ml 5 -mn 2 -mc 0 -le 4 -ne 3 -ce 0
 ```
+
+## Config
+
+On first use, passwordGen creates a file called .pginfo in your home directory with a json object outlining the policy parameters above. A default policy is written to this file. passwordGen will look for this file upon invocation. You can change the paremeters to suit your needs.
+
 
 Have fun!
