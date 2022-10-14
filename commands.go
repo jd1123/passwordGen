@@ -2,51 +2,69 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 
-	"github.com/codegangsta/cli"
 	"github.com/jd1123/passwordGen/randgen"
 )
 
-func GenCommand() cli.Command {
-	return cli.Command{
-		Name:        "new",
-		Usage:       "Generate a new password",
-		Description: "Generate a new psuedorandom password",
-		Action: func(c *cli.Context) {
-			p := randgen.NewPolicy(c.Int("ml"), c.Int("mn"), c.Int("mc"), c.Int("le"), c.Int("ne"), c.Int("ce"))
-			fmt.Println(randgen.GeneratePassword(p))
-		},
-		Flags: []cli.Flag{
-			cli.IntFlag{
-				Name:  "ml",
-				Value: 7,
-				Usage: "Minimum number of letters",
-			},
-			cli.IntFlag{
-				Name:  "mn",
-				Value: 4,
-				Usage: "Minimum number of numbers",
-			},
-			cli.IntFlag{
-				Name:  "mc",
-				Value: 3,
-				Usage: "Minimum number of characters",
-			},
-			cli.IntFlag{
-				Name:  "le",
-				Value: 0,
-				Usage: "Letter entropy (for variable length passwords)",
-			},
-			cli.IntFlag{
-				Name:  "ne",
-				Value: 0,
-				Usage: "Number entropy (for variable length passwords)",
-			},
-			cli.IntFlag{
-				Name:  "ce",
-				Value: 0,
-				Usage: "Character entropy (for variable length passwords)",
-			},
-		},
+type args_noconfig struct {
+	Ml      string `help:"Min Letters" default:"15"`
+	Mn      string `help:"Min Numbers" default:"12"`
+	Mc      string `help:"Min Characters" default:"0"`
+	Le      string `help:"Letter Entropy" default:"5"`
+	Ne      string `help:"Number Entropy" default:"5"`
+	Ce      string `help:"Character Entropy" default:"0"`
+	Verbose bool   `arg:"-v, --verbose" help:"verbose"`
+}
+
+type args struct {
+	Ml      string `help:"Min Letters"`
+	Mn      string `help:"Min Numbers"`
+	Mc      string `help:"Min Characters"`
+	Le      string `help:"Letter Entropy"`
+	Ne      string `help:"Number Entropy"`
+	Ce      string `help:"Character Entropy"`
+	Verbose bool   `arg:"-v, --verbose" help:"verbose"`
+}
+
+/*
+func (args) Description() string {
+	return "passwordGen - Strong psueodrandom passwords"
+}
+*/
+func createPolicy(a args) randgen.Policy {
+	//ml, err := strconv.Atoi(a.Ml)
+	ml, err := strconv.Atoi(a.Ml)
+	fmt.Println(a.Mn)
+	if err != nil {
+		fmt.Println("Error: commandline arguments must be integers")
+		os.Exit(1)
 	}
+	mn, err := strconv.Atoi(a.Mn)
+	if err != nil {
+		fmt.Println("Error: commandline arguments must be integers")
+		os.Exit(1)
+	}
+	mc, err := strconv.Atoi(a.Mc)
+	if err != nil {
+		fmt.Println("Error: commandline arguments must be integers")
+		os.Exit(1)
+	}
+	le, err := strconv.Atoi(a.Le)
+	if err != nil {
+		fmt.Println("Error: commandline arguments must be integers")
+		os.Exit(1)
+	}
+	ne, err := strconv.Atoi(a.Ne)
+	if err != nil {
+		fmt.Println("Error: commandline arguments must be integers")
+		os.Exit(1)
+	}
+	ce, err := strconv.Atoi(a.Ce)
+	if err != nil {
+		fmt.Println("Error: commandline arguments must be integers")
+		os.Exit(1)
+	}
+	return randgen.NewPolicy(ml, mn, mc, le, ne, ce)
 }

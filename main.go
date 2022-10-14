@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/user"
 
-	"github.com/codegangsta/cli"
+	"github.com/alexflint/go-arg"
 	"github.com/jd1123/passwordGen/randgen"
 )
 
@@ -17,27 +17,25 @@ func main() {
 		os.Exit(1)
 	}
 	homeDirectory := user.HomeDir
-
 	configfile := homeDirectory + "/.pginfo"
-	defaultPolicy := randgen.StandardPolicy
+	var defaultPolicy randgen.Policy
+
 	if fileExists(configfile) {
+		var a args
+		arg.MustParse(&a)
 		defaultPolicy = parseConfig(configfile)
+		if a.Verbose {
+			printPolicy(defaultPolicy)
+		}
 	} else {
+		var a args_noconfig
+		arg.MustParse(&a)
 		fmt.Println("No config file found. Creating default policy in ~/.pginfo...")
 		writeFile(configfile)
 		defaultPolicy = parseConfig(configfile)
+		if a.Verbose {
+			printPolicy(defaultPolicy)
+		}
 	}
-
-	app := cli.NewApp()
-	app.Name = "passwordGen"
-	app.Usage = "Generate Psuedorandom Passwords"
-	app.Commands = []cli.Command{
-		GenCommand(),
-	}
-
-	app.Action = func(c *cli.Context) {
-		fmt.Println(randgen.GeneratePassword(defaultPolicy))
-	}
-
-	app.Run(os.Args)
+	fmt.Println(randgen.GeneratePassword(defaultPolicy))
 }

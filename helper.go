@@ -55,3 +55,7 @@ func parseConfig(filename string) randgen.Policy {
 	policy := randgen.NewPolicy(c.MinLetters, c.MinNumbers, c.MinCharacters, c.LetterEntropy, c.NumberEntropy, c.CharacterEntropy)
 	return policy
 }
+
+func printPolicy(p randgen.Policy) {
+	fmt.Printf("ml: %d mn: %d mc: %d le: %d ne: %d ce: %d\n", p.MinLetters, p.MinNumbers, p.MinCharacters, p.LetterEntropy, p.NumberEntropy, p.CharacterEntropy)
+}

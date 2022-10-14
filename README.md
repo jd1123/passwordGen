@@ -28,7 +28,7 @@ Password policies are used to set different number of letters, numbers and chara
 
 The following generates a password from 7 to 14 runes, with a minimum of 5 letters and 2 numbers:
 ```
-passwordGen new -ml 5 -mn 2 -mc 0 -le 4 -ne 3 -ce 0
+passwordGen -ml 5 -mn 2 -mc 0 -le 4 -ne 3 -ce 0
 ```
 
 ## Config
