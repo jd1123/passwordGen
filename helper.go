@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/jd1123/passwordGen/randgen"
@@ -27,7 +26,7 @@ func writeFile(filename string) {
         "CharacterEntryopy": 0
 }`
 
-	err := ioutil.WriteFile(filename, []byte(s), 0644)
+	err := os.WriteFile(filename, []byte(s), 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -44,6 +43,10 @@ type ConfigStruct struct {
 
 func parseConfig(filename string) randgen.Policy {
 	f, err := os.Open(filename)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	defer f.Close()
 	decoder := json.NewDecoder(f)
 	c := ConfigStruct{}

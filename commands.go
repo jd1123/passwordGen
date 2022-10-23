@@ -28,11 +28,16 @@ type args struct {
 	Verbose bool   `arg:"-v, --verbose" help:"verbose"`
 }
 
-/*
-func (args) Description() string {
-	return "passwordGen - Strong psueodrandom passwords"
+var Version = "development version"
+
+func (args) Version() string {
+	return "v: " + Version
 }
-*/
+
+func (args) Description() string {
+	return "Strong psueodrandom passwords"
+}
+
 func createPolicy(a args) randgen.Policy {
 	//ml, err := strconv.Atoi(a.Ml)
 	ml, err := strconv.Atoi(a.Ml)
